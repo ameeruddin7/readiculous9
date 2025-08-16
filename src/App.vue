@@ -17,6 +17,24 @@ import TheWelcome from './components/TheWelcome.vue'
   </main>
 </template>
 
+<template>
+  <div>
+    <h1>📚 Welcome to Readiculous Book Club</h1>
+    <PreferencesPage />
+  </div>
+</template>
+
+<script>
+import PreferencesPage from "./components/PreferencesPage.vue";
+
+export default {
+  components: {
+    PreferencesPage
+  }
+};
+</script>
+
+
 <style scoped>
 header {
   line-height: 1.5;
