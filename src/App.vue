@@ -15,21 +15,21 @@ import TheWelcome from './components/TheWelcome.vue'
   <main>
     <TheWelcome />
   </main>
-</template>
 
-<template>
+
+
   <div>
     <h1>📚 Welcome to Readiculous Book Club</h1>
-    <PreferencesPage />
+    <Preferencespage />
   </div>
 </template>
 
 <script>
-import PreferencesPage from "./components/PreferencesPage.vue";
+import Preferencespage from "./components/Preferencespage.vue";
 
 export default {
   components: {
-    PreferencesPage
+    Preferencespage
   }
 };
 </script>

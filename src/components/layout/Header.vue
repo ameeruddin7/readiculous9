@@ -19,7 +19,7 @@
     </header>
 
     <!-- Preferences Section -->
-    <section class="preferences">
+    <section class="preferencepage">
       <h3>Preferences</h3>
       <ul>
         <li>Thriller</li>
