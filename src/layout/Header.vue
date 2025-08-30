@@ -6,6 +6,7 @@
       <div class="dropdown-content">
         <ul> <router-link to="/book">Book</router-link>
           <li><router-link to="/login">login</router-link></li>
+          <li><router-link to="/Home">Home</router-link></li>
           <li><router-link to="/signup">signup</router-link></li>
           <li><RouterLink to="preference">preference</RouterLink></li>
           <li><router-link to="/library">Library</router-link></li>

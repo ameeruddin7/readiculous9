@@ -2,8 +2,19 @@
   <footer class="footer">
     <div class="footer-content">
       <p>&copy; 2025 Prodemy. All rights reserved.</p>
+
       <div class="footer-links">
-        <router-link to="/about">About</router-link>
+        <!-- About with expandable info -->
+        <div class="footer-link">
+          <a href="#" @click.prevent="toggleAbout">About</a>
+          <p v-if="showAbout" class="footer-info">
+            READiculous is a vibrant book club where readers connect, collaborate,
+            and share their love for books. Join us to discover hidden gems and
+            exciting discussions!
+          </p>
+        </div>
+
+        <!-- Normal router links -->
         <router-link to="/contact">Contact</router-link>
         <router-link to="/privacy">Privacy</router-link>
       </div>
@@ -12,7 +23,13 @@
 </template>
 
 <script setup lang="ts">
-// No script logic needed
+import { ref } from "vue";
+
+const showAbout = ref(false);
+
+const toggleAbout = () => {
+  showAbout.value = !showAbout.value;
+};
 </script>
 
 <style scoped>
@@ -29,7 +46,7 @@
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   flex-wrap: wrap;
 }
 
@@ -43,6 +60,12 @@
   gap: 20px;
 }
 
+.footer-link {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
 .footer-links a {
   color: #111;
   text-decoration: none;
@@ -52,5 +75,12 @@
 
 .footer-links a:hover {
   color: #00cc66; /* Darker green on hover */
+}
+
+.footer-info {
+  font-size: 0.8rem;
+  color: #555;
+  margin-top: 5px;
+  max-width: 250px;
 }
 </style>
