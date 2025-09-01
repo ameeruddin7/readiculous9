@@ -1,6 +1,6 @@
 <template>
   <div class="signup-page">
-    // Background image (books theme)
+
     <div class="background"></div>
 
     <div class="signup-container">
@@ -76,8 +76,6 @@ const handleSubmit = () => {
   font-family: 'Arial', sans-serif;
 }
 
-/* Background books image (replace with your own) */
-./* Background books image (replace with your own) */
 .background {
   position: absolute;
   top: 0;
