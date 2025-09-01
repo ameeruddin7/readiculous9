@@ -10,9 +10,9 @@
           <li><router-link to="/signup">signup</router-link></li>
           <li><RouterLink to="preference">preference</RouterLink></li>
           <li><router-link to="/library">Library</router-link></li>
-          <li><router-link to="/join">Join</router-link></li>
+          <li><router-link to="/CreateClub">Create Club</router-link></li>
+          <li><router-link to="/club/:id/admin">Admin Page</router-link></li>
           <li><router-link to="/account">Account</router-link></li>
-          <li><router-link to="/invite">Invite</router-link></li>
           <li><router-link to="/profile">Profile</router-link></li>
           <li><router-link to="/settings">Settings</router-link></li>
           <li><router-link to="/logout">Logout</router-link></li>
