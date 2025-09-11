@@ -10,7 +10,6 @@ import preferencepage from "@/views/preferencepage.vue";
 import Library from "@/views/Library.vue";
 
 
-
 const routes = [
     {path: '/',name: 'Home', component: Home},
     {path: '/ForgotPassword',name: 'ForgotPassword', component: ForgotPassword},
@@ -19,7 +18,7 @@ const routes = [
     {path: '/signup',name: 'signup',component: signup},
     {path: '/CreateClub', name: 'CreateClub', component: CreateClub},
     {path: '/club/:id/admin', name: 'AdminPage', component: AdminPage},
-    {path: '/preferencepage',name: 'preferencepage',component: preferencepage},
+    {path: '/preference',name: 'preference',component: preferencepage},
     {path: '/Library',name: 'Library',component: Library},
 
 ]
