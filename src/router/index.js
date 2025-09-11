@@ -7,7 +7,7 @@ import signup from "@/views/signup.vue";
 import CreateClub from "@/views/CreateClub.vue";
 import AdminPage from "@/views/AdminPage.vue";
 import preferencepage from "@/views/preferencepage.vue";
-import Library from "@/views/Library ";
+import Library from "@/views/Library.vue";
 
 
 
