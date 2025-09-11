@@ -6,6 +6,10 @@ import book from "@/views/book.vue";
 import signup from "@/views/signup.vue";
 import CreateClub from "@/views/CreateClub.vue";
 import AdminPage from "@/views/AdminPage.vue";
+import preferencepage from "@/views/preferencepage.vue";
+import Library from "@/views/Library ";
+
+
 
 const routes = [
     {path: '/',name: 'Home', component: Home},
@@ -14,7 +18,10 @@ const routes = [
     {path: '/book',name: 'book',component: book},
     {path: '/signup',name: 'signup',component: signup},
     {path: '/CreateClub', name: 'CreateClub', component: CreateClub},
-    {path: '/club/:id/admin', name: 'AdminPage', component: AdminPage}
+    {path: '/club/:id/admin', name: 'AdminPage', component: AdminPage},
+    {path: '/preferencepage',name: 'preferencepage',component: preferencepage},
+    {path: '/Library',name: 'Library',component: Library},
+
 ]
 
 const router = createRouter({
