@@ -8,7 +8,7 @@ import CreateClub from "@/views/CreateClub.vue";
 import AdminPage from "@/views/AdminPage.vue";
 
 const routes = [
-    {path: '/Home',name: 'Home', component: Home},
+    {path: '/',name: 'Home', component: Home},
     {path: '/ForgotPassword',name: 'ForgotPassword', component: ForgotPassword},
     {path: '/Login', name: 'Login', component: LoginPage},
     {path: '/book',name: 'book',component: book},
