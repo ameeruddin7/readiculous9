@@ -7,12 +7,11 @@
         <ul>
           <li><router-link to="/book">Book</router-link></li>
           <li><router-link to="/login">Login</router-link></li>
-          <li><router-link to="/">Home</router-link></li> <!-- ✅ fixed -->
-          <li><router-link to="/signup">Signup</router-link></li>
+          <li><router-link to="/">Home</router-link></li>
           <li><router-link to="/preference">Preference</router-link></li>
           <li><router-link to="/library">Library</router-link></li>
           <li><router-link to="/CreateClub">Create Club</router-link></li>
-          <li><router-link to="/club/1/admin">Admin Page</router-link></li> <!-- ✅ example id -->
+          <li><router-link to="/club/1/admin">Admin Page</router-link></li>
           <li><router-link to="/profile">Profile</router-link></li>
           <li><router-link to="/logout">Logout</router-link></li>
         </ul>
