@@ -41,16 +41,17 @@ import Footer from './Footer.vue'
   z-index: -1; /* Push behind content */
 }
 
-/* Main content stays readable */
 .main-content {
   flex: 1;
   padding: 30px 20px;
-  max-width: 1200px;
+  max-width: 1600px; /* was 1200px */
   margin: 0 auto;
   box-sizing: border-box;
-  background-color: rgba(255, 255, 255, 0.85); /* Transparent white */
+  background-color: rgba(255, 255, 255, 0.85);
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  margin-top: 90px; /* space for sticky header */
+  margin-top: 90px;
 }
+
+
 </style>

@@ -36,6 +36,14 @@ const toggleForm = () => {
   password.value = ''
   confirmPassword.value = ''
 }
+let endpoint =''
+if (role.value === 'Ádmin') {
+  endpoint = ' http://localhost:8080/api/admins/{{id}}'
+}else if (role.value ==='User'){
+  endpoint = ''
+
+}
+
 
 const submitForm = () => {
   if (!email.value || !password.value || (!isLogin.value && (!name.value || !surname.value || !username.value || !contact.value || !confirmPassword.value))) {
