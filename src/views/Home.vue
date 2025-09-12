@@ -4,7 +4,7 @@
     <section class="hero">
       <h1>Welcome to READiculous 📚</h1>
       <p>Where book lovers unite to read, collaborate, and speak about books.</p>
-      <button @click="$router.push('/signup')" class="join-btn">Join the Club</button>
+      <button @click="$router.push('/LoginPage')" class="join-btn">Join the Club</button>
     </section>
 
     <!-- Preferences Section -->

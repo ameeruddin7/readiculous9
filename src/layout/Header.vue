@@ -106,5 +106,4 @@
 }
 </style>
 <script setup lang="ts">
-import Signup from "@/views/signup.vue";
 </script>

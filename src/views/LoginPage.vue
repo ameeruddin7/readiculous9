@@ -36,13 +36,7 @@ const toggleForm = () => {
   password.value = ''
   confirmPassword.value = ''
 }
-let endpoint =''
-if (role.value === 'Ádmin') {
-  endpoint = ' http://localhost:8080/api/admins/{{id}}'
-}else if (role.value ==='User'){
-  endpoint = ''
 
-}
 
 
 const submitForm = () => {
