@@ -5,7 +5,7 @@
       <h1>Welcome to READiculous 📚</h1>
       <p>Where book lovers unite to read, collaborate, and speak about books.</p>
       <!-- ✅ updated button -->
-      <button @click="$router.push({ name: 'LoginPage' })" class="join-btn">
+      <button @click="goToLogin" class="join-btn">
         Join the Club
       </button>
     </section>
@@ -79,10 +79,14 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "Home",
-};
+<script setup>
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+function goToLogin() {
+  router.push({ name: 'Login' }); // Must match your router config
+}
 </script>
 
 <style scoped>

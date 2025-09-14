@@ -1,77 +1,3 @@
-<script setup>
-import {ref, computed} from 'vue'
-import {useRouter} from 'vue-router'
-import ForgotPassword from "@/views/ForgotPassword.vue";   //  import router
-
-const router = useRouter()               //  create router instance
-
-const isLogin = ref(true)
-const showForgotPassword = ref(false)
-
-const name = ref('')
-const surname = ref('')
-const username = ref('')
-const contact = ref('')
-const email = ref('')
-const password = ref('')
-const confirmPassword = ref('')
-
-// Password strength: at least 8 characters, one number, one uppercase, one lowercase
-const isPasswordStrong = computed(() =>
-    /^(?=.[a-z])(?=.[A-Z])(?=.*\d).{8,}$/.test(password.value)
-)
-
-const doPasswordsMatch = computed(() =>
-    password.value === confirmPassword.value
-)
-
-const toggleForm = () => {
-  isLogin.value = !isLogin.value
-  showForgotPassword.value = false
-  name.value = ''
-  surname.value = ''
-  username.value = ''
-  contact.value = ''
-  email.value = ''
-  password.value = ''
-  confirmPassword.value = ''
-}
-
-
-
-const submitForm = () => {
-  if (!email.value || !password.value || (!isLogin.value && (!name.value || !surname.value || !username.value || !contact.value || !confirmPassword.value))) {
-    alert('Please fill in all required fields.')
-    return
-  }
-
-  if (!isLogin.value) {
-    // Signup
-    if (!isPasswordStrong.value) {
-      alert('Password must be at least 8 characters long and include a number, an uppercase, and a lowercase letter.')
-      return
-    }
-
-    if (!doPasswordsMatch.value) {
-      alert('Passwords do not match.')
-      return
-    }
-
-    alert('Signing up as ${username.value} with email ${email.value}')
-  } else {
-    // Login
-    const isEmail = email.value.includes('@')
-    const loginType = isEmail ? 'email' : 'username'
-
-    //  You can remove the alert if you don’t want it
-    alert('Logging in with ${loginType}: ${email.value}')
-
-    //  after successful login, go to Library page
-    router.push('/library')
-  }
-}
-</script>
-
 <template>
   <div class="page">
     <div class="logo-container">
@@ -85,33 +11,33 @@ const submitForm = () => {
         <template v-if="!isLogin">
           <div class="form-group">
             <label>Name</label>
-            <input v-model="name" type="text" required/>
+            <input v-model="name" type="text" required />
           </div>
 
           <div class="form-group">
             <label>Surname</label>
-            <input v-model="surname" type="text" required/>
+            <input v-model="surname" type="text" required />
           </div>
 
           <div class="form-group">
             <label>Username</label>
-            <input v-model="username" type="text" required/>
+            <input v-model="username" type="text" required />
           </div>
 
           <div class="form-group">
             <label>Contact Number</label>
-            <input v-model="contact" type="tel" required/>
+            <input v-model="contact" type="tel" required />
           </div>
         </template>
 
         <div class="form-group">
           <label>{{ isLogin ? 'Username or Email' : 'Email' }}</label>
-          <input v-model="email" :type="isLogin ? 'text' : 'email'" required/>
+          <input v-model="email" :type="isLogin ? 'text' : 'email'" required />
         </div>
 
         <div class="form-group">
           <label>{{ isLogin ? 'Password' : 'Create Password' }}</label>
-          <input v-model="password" type="password" required/>
+          <input v-model="password" type="password" required />
           <small v-if="!isLogin && password && !isPasswordStrong" class="error">
             Password must be at least 8 characters long, include a number, an uppercase and a lowercase letter.
           </small>
@@ -119,13 +45,15 @@ const submitForm = () => {
 
         <div class="form-group" v-if="!isLogin">
           <label>Confirm Password</label>
-          <input v-model="confirmPassword" type="password" required/>
+          <input v-model="confirmPassword" type="password" required />
           <small v-if="confirmPassword && !doPasswordsMatch" class="error">
             Passwords do not match.
           </small>
         </div>
 
-        <button type="submit" class="submit-btn">{{ isLogin ? 'Login' : 'Sign Up' }}</button>
+        <button type="submit" class="submit-btn">
+          {{ isLogin ? 'Login' : 'Sign Up' }}
+        </button>
       </form>
 
       <p class="toggle-text" @click="toggleForm">
@@ -137,13 +65,108 @@ const submitForm = () => {
       </p>
     </div>
 
-    <ForgotPassword v-else @back="showForgotPassword = false"/>
+    <ForgotPassword v-else @back="showForgotPassword = false" />
   </div>
 </template>
 
+<script setup>
+import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
+import ForgotPassword from "@/views/ForgotPassword.vue";
+import axios from "axios"; // ✅ Import axios
+
+const router = useRouter();
+
+const isLogin = ref(true);
+const showForgotPassword = ref(false);
+
+const name = ref("");
+const surname = ref("");
+const username = ref("");
+const contact = ref("");
+const email = ref("");
+const password = ref("");
+const confirmPassword = ref("");
+
+// Password validation
+const isPasswordStrong = computed(() =>
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(password.value)
+);
+
+const doPasswordsMatch = computed(() => password.value === confirmPassword.value);
+
+const toggleForm = () => {
+  isLogin.value = !isLogin.value;
+  showForgotPassword.value = false;
+  name.value = "";
+  surname.value = "";
+  username.value = "";
+  contact.value = "";
+  email.value = "";
+  password.value = "";
+  confirmPassword.value = "";
+};
+
+const submitForm = async () => {
+  if (
+      !email.value ||
+      !password.value ||
+      (!isLogin.value &&
+          (!name.value ||
+              !surname.value ||
+              !username.value ||
+              !contact.value ||
+              !confirmPassword.value))
+  ) {
+    alert("Please fill in all required fields.");
+    return;
+  }
+
+  try {
+    if (!isLogin.value) {
+      // --- SIGNUP ---
+      if (!isPasswordStrong.value) {
+        alert("Password must be strong.");
+        return;
+      }
+      if (!doPasswordsMatch.value) {
+        alert("Passwords do not match.");
+        return;
+      }
+
+      const response = await axios.post("http://localhost:8080/api/customers", {
+        Firstname: name.value,
+        Lastsurname: surname.value,
+        username: username.value,
+        email: email.value,
+        password: password.value,
+      });
+
+      alert("Signup successful!");
+      console.log(response.data);
+    } else {
+      // --- LOGIN ---
+      const response = await axios.post("http://localhost:8080/api/auth/login", {
+        email: email.value,
+        password: password.value,
+      });
+
+      // Example: store JWT
+      localStorage.setItem("token", response.data.token);
+
+      alert("Login successful!");
+      router.push("/library");
+    }
+  } catch (error) {
+    console.error(error);
+    alert(error.response?.data?.message || "Something went wrong.");
+  }
+};
+</script>
+
 <style scoped>
 .page {
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
   background: #ffffff;
   min-height: 100vh;
   width: 100%;
