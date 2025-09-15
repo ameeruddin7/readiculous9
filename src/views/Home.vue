@@ -4,13 +4,13 @@
     <section class="hero">
       <h1>Welcome to READiculous 📚</h1>
       <p>Where book lovers unite to read, collaborate, and speak about books.</p>
-      <!-- ✅ updated button -->
+
       <button @click="goToLogin" class="join-btn">
         Join the Club
       </button>
     </section>
 
-    <!-- Preferences Section -->
+
     <section class="preferences">
       <h3>Your Preferences</h3>
       <ul>
@@ -20,7 +20,7 @@
       </ul>
     </section>
 
-    <!-- Trending Books Section -->
+
     <section class="trending-books">
       <h3>📈 Trending Books</h3>
       <div class="book-cards">
@@ -39,7 +39,7 @@
       </div>
     </section>
 
-    <!-- Top Discussions -->
+
     <section class="discussions">
       <h3>💬 Top Discussions</h3>
       <ul>
@@ -49,7 +49,7 @@
       </ul>
     </section>
 
-    <!-- Recently Liked Books Section -->
+
     <section class="liked-books">
       <h3>Recently Liked Books</h3>
       <div class="book-icons">
@@ -59,7 +59,7 @@
       </div>
     </section>
 
-    <!-- Motivational Quote -->
+
     <section class="quote">
       <blockquote>
         “A reader lives a thousand lives before he dies. The man who never reads lives only one.”

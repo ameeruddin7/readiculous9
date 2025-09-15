@@ -8,14 +8,15 @@
       <h2>{{ isLogin ? 'Login' : 'Sign Up' }}</h2>
 
       <form @submit.prevent="submitForm">
+        <!-- Extra fields for signup -->
         <template v-if="!isLogin">
           <div class="form-group">
-            <label>Name</label>
+            <label>First Name</label>
             <input v-model="name" type="text" required />
           </div>
 
           <div class="form-group">
-            <label>Surname</label>
+            <label>Last Name</label>
             <input v-model="surname" type="text" required />
           </div>
 
@@ -30,11 +31,13 @@
           </div>
         </template>
 
+        <!-- Email / Username -->
         <div class="form-group">
           <label>{{ isLogin ? 'Username or Email' : 'Email' }}</label>
           <input v-model="email" :type="isLogin ? 'text' : 'email'" required />
         </div>
 
+        <!-- Password -->
         <div class="form-group">
           <label>{{ isLogin ? 'Password' : 'Create Password' }}</label>
           <input v-model="password" type="password" required />
@@ -43,6 +46,7 @@
           </small>
         </div>
 
+        <!-- Confirm Password -->
         <div class="form-group" v-if="!isLogin">
           <label>Confirm Password</label>
           <input v-model="confirmPassword" type="password" required />
@@ -56,15 +60,18 @@
         </button>
       </form>
 
+      <!-- Toggle between Login and Signup -->
       <p class="toggle-text" @click="toggleForm">
         {{ isLogin ? "Don't have an account? Sign Up" : "Already have an account? Login" }}
       </p>
 
+      <!-- Forgot Password -->
       <p v-if="isLogin" class="forgot-password">
         <a @click.prevent="showForgotPassword = true" href="#">Forgot password?</a>
       </p>
     </div>
 
+    <!-- Forgot Password Component -->
     <ForgotPassword v-else @back="showForgotPassword = false" />
   </div>
 </template>
@@ -73,7 +80,7 @@
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import ForgotPassword from "@/views/ForgotPassword.vue";
-import axios from "axios"; // ✅ Import axios
+import axios from "axios";
 
 const router = useRouter();
 
@@ -134,12 +141,13 @@ const submitForm = async () => {
         return;
       }
 
-      const response = await axios.post("http://localhost:8080/api/customers", {
-        Firstname: name.value,
-        Lastsurname: surname.value,
+      const response = await axios.post("http://localhost:8080/api/admins", {
+        firstName: name.value,
+        lastName: surname.value,
         username: username.value,
         email: email.value,
         password: password.value,
+        contact: contact.value,
       });
 
       alert("Signup successful!");
@@ -151,15 +159,14 @@ const submitForm = async () => {
         password: password.value,
       });
 
-      // Example: store JWT
       localStorage.setItem("token", response.data.token);
-
       alert("Login successful!");
       router.push("/library");
     }
   } catch (error) {
     console.error(error);
     alert(error.response?.data?.message || "Something went wrong.");
+    alert(error);
   }
 };
 </script>
@@ -215,7 +222,7 @@ const submitForm = async () => {
   display: block;
 }
 
-input {
+.input {
   width: 100%;
   padding: 0.7rem;
   border-radius: 6px;
@@ -223,6 +230,13 @@ input {
   background: #f0f0f0;
   font-size: 1rem;
   color: #000000;
+}
+
+input:focus {
+  outline: none;
+  border-color: #000;
+  background: #fff;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
 }
 
 small.error {
@@ -242,6 +256,7 @@ small.error {
   font-size: 1.1rem;
   cursor: pointer;
   width: 100%;
+  transition: background 0.2s ease-in-out;
 }
 
 .submit-btn:hover {
