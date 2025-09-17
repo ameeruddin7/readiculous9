@@ -12,12 +12,10 @@
           <li><router-link to="/library">Library</router-link></li>
           <li><router-link to="/CreateClub">Create Club</router-link></li>
           <li><router-link to="/club/1/admin">Admin Page</router-link></li>
-          <li><router-link to="/profile">Profile</router-link></li>
-          <li><router-link to="/logout">Logout</router-link></li>
+          <li><a href="#" @click.prevent="logout">Logout</a></li>
         </ul>
       </div>
     </div>
-
 
     <!-- Right: Logo -->
     <div class="logo-container">
@@ -25,6 +23,21 @@
     </div>
   </header>
 </template>
+
+<script setup lang="ts">
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+function logout() {
+  // Clear user session or tokens
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+
+  // Redirect to login page
+  router.push({ name: "Login" });
+}
+</script>
 
 <style scoped>
 /* Header container */
@@ -34,9 +47,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: white; /* light background */
+  background-color: white;
   padding: 16px 24px;
-  border-bottom: 3px solid #00cc66; /* green accent */
+  border-bottom: 3px solid #00cc66;
   z-index: 1000;
 }
 
@@ -56,7 +69,7 @@
 }
 
 .dropbtn {
-  background-color: white; /* white button */
+  background-color: white;
   color: black;
   padding: 10px 16px;
   font-size: 16px;
@@ -81,7 +94,7 @@
   background-color: white;
   min-width: 180px;
   border-radius: 6px;
-  box-shadow: 0px 8px 16px rgba(0,0,0,0.3);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.3);
   z-index: 1;
 }
 
@@ -105,5 +118,3 @@
   display: block;
 }
 </style>
-<script setup lang="ts">
-</script>

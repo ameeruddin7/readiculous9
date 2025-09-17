@@ -19,6 +19,7 @@ const routes = [
     {path: '/preference',name: 'preference',component: preferencepage},
     {path: '/Library',name: 'Library',component: Library},
 
+
 ]
 
 const router = createRouter({
