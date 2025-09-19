@@ -61,32 +61,33 @@ export default {
 </script>
 
 <style scoped>
-/* Solid gradient background (warm, book-club themed) */
+/* Black and white background */
 .preferences-container {
-  background: linear-gradient(135deg, #4a2c2a, #8b5e3c, #d2b48c);
+  background: linear-gradient(135deg, #000000, #1a1a1a, #333333);
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: 'Georgia', serif;
+  color: #ffffff;
 }
 
 /* Content box */
 .overlay {
-  background: #fdf6ec;
+  background: #ffffff;
   padding: 40px;
   border-radius: 15px;
-  color: #333;
+  color: #000000;
   text-align: center;
   width: 450px;
-  box-shadow: 0px 6px 15px rgba(0,0,0,0.3);
+  box-shadow: 0px 6px 15px rgba(255,255,255,0.1);
 }
 
 h1 {
   font-size: 28px;
   margin-bottom: 25px;
-  color: #4a2c2a;
-  text-shadow: 1px 1px 2px #e0c9a6;
+  color: #000000;
+  text-shadow: 1px 1px 2px #cccccc;
 }
 
 /* Form styling */
@@ -98,21 +99,23 @@ h1 {
 
 label {
   font-weight: bold;
-  color: #6a4e42;
+  color: #333333;
   text-align: left;
 }
 
 select {
   padding: 10px;
   border-radius: 8px;
-  border: 1px solid #c9a66b;
+  border: 1px solid #555555;
   outline: none;
   font-size: 15px;
+  background: #f9f9f9;
+  color: #000000;
 }
 
 button {
-  background: #8b5e3c;
-  color: white;
+  background: #000000;
+  color: #ffffff;
   font-size: 16px;
   padding: 12px;
   border: none;
@@ -122,6 +125,6 @@ button {
 }
 
 button:hover {
-  background: #6a4e42;
+  background: #333333;
 }
 </style>
