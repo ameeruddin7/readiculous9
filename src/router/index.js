@@ -7,6 +7,7 @@ import CreateClub from "@/views/CreateClub.vue";
 import AdminPage from "@/views/AdminPage.vue";
 import preferencepage from "@/views/preferencepage.vue";
 import Library from "@/views/Library.vue";
+import Profile from "@/views/Profile.vue";
 
 
 const routes = [
@@ -18,6 +19,7 @@ const routes = [
     {path: '/club/:id/admin', name: 'AdminPage', component: AdminPage},
     {path: '/preference',name: 'preference',component: preferencepage},
     {path: '/Library',name: 'Library',component: Library},
+    {path: '/Profile',name: 'Profile',component: Profile},
 
 
 ]
