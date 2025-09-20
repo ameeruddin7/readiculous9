@@ -1,5 +1,3 @@
-//Ameeruddin Arai 230190839
-// 30 -08-2025
 <template>
   <div class="preferences-container">
     <div class="overlay">
@@ -38,6 +36,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "PreferencesPage",
   data() {
@@ -46,22 +46,62 @@ export default {
         genre: "Fiction",
         frequency: "Weekly",
         format: "Print Books"
-      }
+      },
+      userId: null
     };
   },
   methods: {
-    savePreferences() {
-      alert(`Preferences Saved:
-      Genre: ${this.preferences.genre}
-      Frequency: ${this.preferences.frequency}
-      Format: ${this.preferences.format}`);
+    async savePreferences() {
+      if (!this.userId) {
+        alert("User not logged in.");
+        return;
+      }
+
+      try {
+        const response = await axios.post(
+            `http://localhost:8080/api/UserPreference/create`,
+            {
+              userId: this.userId,
+              genre: this.preferences.genre,
+              frequency: this.preferences.frequency,
+              format: this.preferences.format
+            }
+        );
+        alert("Preferences saved successfully!");
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
+        alert("Error saving preferences.");
+      }
+    },
+
+    async loadPreferences() {
+      if (!this.userId) return;
+      try {
+        const response = await axios.get(
+            `http://localhost:8080/api/UserPreference/user/${this.userId}`
+        );
+        if (response.data) {
+          this.preferences = {
+            genre: response.data.genre,
+            frequency: response.data.frequency,
+            format: response.data.format
+          };
+        }
+      } catch (error) {
+        console.error("Error loading preferences:", error);
+      }
     }
+  },
+  mounted() {
+    // Get userId from localStorage or your login flow
+    this.userId = localStorage.getItem("userId");
+    this.loadPreferences();
   }
 };
 </script>
 
 <style scoped>
-/* Black and white background */
 .preferences-container {
   background: linear-gradient(135deg, #000000, #1a1a1a, #333333);
   min-height: 100vh;
@@ -72,7 +112,6 @@ export default {
   color: #ffffff;
 }
 
-/* Content box */
 .overlay {
   background: #ffffff;
   padding: 40px;
@@ -90,7 +129,6 @@ h1 {
   text-shadow: 1px 1px 2px #cccccc;
 }
 
-/* Form styling */
 .preferences-form {
   display: flex;
   flex-direction: column;

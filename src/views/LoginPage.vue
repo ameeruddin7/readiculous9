@@ -42,7 +42,7 @@
           <label>{{ isLogin ? 'Password' : 'Create Password' }}</label>
           <input v-model="password" type="password" required />
           <small v-if="!isLogin && password && !isPasswordStrong" class="error">
-            Password must be at least 8 characters long, include a number, an uppercase and a lowercase letter.
+            Password must be at least 8 characters, include a number, uppercase & lowercase.
           </small>
         </div>
 
@@ -60,18 +60,15 @@
         </button>
       </form>
 
-      <!-- Toggle between Login and Signup -->
       <p class="toggle-text" @click="toggleForm">
         {{ isLogin ? "Don't have an account? Sign Up" : "Already have an account? Login" }}
       </p>
 
-      <!-- Forgot Password -->
       <p v-if="isLogin" class="forgot-password">
         <a @click.prevent="showForgotPassword = true" href="#">Forgot password?</a>
       </p>
     </div>
 
-    <!-- Forgot Password Component -->
     <ForgotPassword v-else @back="showForgotPassword = false" />
   </div>
 </template>
@@ -119,11 +116,7 @@ const submitForm = async () => {
       !email.value ||
       !password.value ||
       (!isLogin.value &&
-          (!name.value ||
-              !surname.value ||
-              !username.value ||
-              !contact.value ||
-              !confirmPassword.value))
+          (!name.value || !surname.value || !username.value || !contact.value || !confirmPassword.value))
   ) {
     alert("Please fill in all required fields.");
     return;
@@ -141,9 +134,9 @@ const submitForm = async () => {
         return;
       }
 
-      const response = await axios.post("http://localhost:8080/api/admins", {
-        firstName: name.value,
-        lastName: surname.value,
+      const response = await axios.post("http://localhost:8080/api/User/create", {
+        name: name.value,
+        surname: surname.value,
         username: username.value,
         email: email.value,
         password: password.value,
@@ -152,21 +145,24 @@ const submitForm = async () => {
 
       alert("Signup successful!");
       console.log(response.data);
+      isLogin.value = true; // switch to login after signup
+
     } else {
       // --- LOGIN ---
-      const response = await axios.post("http://localhost:8080/api/auth/login", {
+      const response = await axios.post("http://localhost:8080/api/User/login", {
         email: email.value,
         password: password.value,
       });
 
-      localStorage.setItem("token", response.data.token);
+      // Store user info in localStorage
+      localStorage.setItem("user", JSON.stringify(response.data));
+
       alert("Login successful!");
-      router.push("/library");
+      router.push("/library"); // redirect after login
     }
   } catch (error) {
     console.error(error);
     alert(error.response?.data?.message || "Something went wrong.");
-    alert(error);
   }
 };
 </script>

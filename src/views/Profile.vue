@@ -1,57 +1,89 @@
 <template>
-  <div class="profile-page">
+  <div class="profile-page" v-if="user">
     <h1>👤 My Profile</h1>
 
     <!-- User Account Info -->
     <section class="profile-card">
       <div class="avatar-container">
-        <img :src="user.avatar" alt="Profile Picture" class="avatar" />
+        <img :src="user.avatar || 'https://i.pravatar.cc/150?img=12'"
+             alt="Profile Picture"
+             class="avatar" />
       </div>
       <div class="info">
-        <h2>{{ user.name }} {{ user.surname }}</h2>
-        <p class="email">{{ user.email }}</p>
+        <input v-model="user.name" placeholder="First Name" />
+        <input v-model="user.surname" placeholder="Last Name" />
+        <input v-model="user.email" placeholder="Email" />
       </div>
     </section>
 
     <!-- Preferences -->
-    <section class="preferences-card">
+    <section class="preferences-card" v-if="preferences">
       <h2>📚 My Reading Preferences</h2>
-      <ul>
-        <li><strong>Favorite Genre:</strong> {{ preferences.genre }}</li>
-        <li><strong>Reading Frequency:</strong> {{ preferences.frequency }}</li>
-        <li><strong>Preferred Format:</strong> {{ preferences.format }}</li>
-      </ul>
+      <label>
+        Favorite Genre:
+        <input v-model="preferences.genre" />
+      </label>
+      <label>
+        Reading Frequency:
+        <input v-model="preferences.frequency" />
+      </label>
+      <label>
+        Preferred Format:
+        <input v-model="preferences.format" />
+      </label>
     </section>
 
-    <!-- Only Edit Profile Button -->
+    <!-- Actions -->
     <div class="actions">
-      <button @click="goToPreferencepage">Edit Profile</button>
+      <button @click="saveProfile">💾 Save Profile</button>
+      <button @click="goToPreferences">Edit Preferences Page</button>
     </div>
+  </div>
+
+  <div v-else class="loading">
+    <p>Loading profile...</p>
   </div>
 </template>
 
 <script setup>
-import { reactive } from "vue"
+import { ref, onMounted } from "vue"
 import { useRouter } from "vue-router"
+import axios from "axios"
 
 const router = useRouter()
+const user = ref(null)
+const preferences = ref(null)
 
-// Hardcoded user info
-const user = reactive({
-  name: "Ameeruddin",
-  surname: "Arai",
-  email: "ameeruddin.arai@example.com",
-  avatar: "https://i.pravatar.cc/150?img=12"
+// Example: Hardcode logged-in user ID for now (replace with auth state later)
+const userId = 1
+
+// Fetch user profile on page load
+onMounted(async () => {
+  try {
+    const response = await axios.get(`http://localhost:8080/api/User/read/${userId}`)
+    user.value = response.data
+    preferences.value = response.data.preferences || {}
+  } catch (error) {
+    console.error("Error fetching user profile:", error)
+  }
 })
 
-// Hardcoded preferences
-const preferences = reactive({
-  genre: "Science Fiction",
-  frequency: "Weekly",
-  format: "E-Books"
-})
+// Save updated profile (PUT request)
+async function saveProfile() {
+  try {
+    const payload = {
+      ...user.value,
+      preferences: preferences.value
+    }
+    const response = await axios.put(`http://localhost:8080/api/User/update`, payload)
+    user.value = response.data
+    alert("✅ Profile updated successfully!")
+  } catch (error) {
+    console.error("Error updating profile:", error)
+    alert("❌ Failed to update profile.")
+  }
+}
 
-// redirect to preferences page
 function goToPreferences() {
   router.push("/preferences") // make sure this route exists
 }
@@ -79,14 +111,24 @@ function goToPreferences() {
   border-radius: 50%;
 }
 
+input {
+  display: block;
+  margin: 0.5rem auto;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.4rem;
+  width: 90%;
+}
+
 .preferences-card h2 {
   margin-bottom: 0.5rem;
   color: #4a2c2a;
 }
 
-.preferences-card ul {
-  list-style: none;
-  padding: 0;
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
 }
 
 .actions button {
