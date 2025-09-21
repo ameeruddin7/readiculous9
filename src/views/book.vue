@@ -1,103 +1,147 @@
+<script setup>
+import { ref } from "vue";
+import axios from "axios";
+
+const title = ref("Our Readiculous Books for Readaholics");
+
+// Import all images
+import breathe from "@/assets/breathe.jpg";
+import door from "@/assets/door.jpg";
+import star from "@/assets/star.jpg";
+import moon from "@/assets/the moon.jpg";
+import karin from "@/assets/karin.jpg";
+import wicked from "@/assets/wicked.jpg";
+import vintage from "@/assets/vintage book.jpg";
+import alone from "@/assets/alone.jpg";
+import green from "@/assets/green.jpg";
+import revenge from "@/assets/revenge.jpg";
+import watching from "@/assets/watching.jpg";
+import shadow from "@/assets/shadow.jpg";
+import serpent from "@/assets/serpent.jpg";
+import rule from "@/assets/rule.png";
+import night from "@/assets/night caller.jpg";
+import ice from "@/assets/ice.jpg";
+import house from "@/assets/house.jpg";
+import clap from "@/assets/clap.jpg";
+import swallows from "@/assets/swallows.jpg";
+import really from "@/assets/really.jpg";
+import past from "@/assets/past.jpg";
+import orange from "@/assets/orange.jpg";
+import norse from "@/assets/norse.jpg";
+import man from "@/assets/man's.jpg";
+
+// Books array using backend-friendly naming
+const books = ref([
+  { bookId: 1, title: "Breathe", cover: breathe, liked: false, message: "", showActions: false, likes: 0 },
+  { bookId: 2, title: "Beyond The Ocean Door", cover: door, liked: false, message: "", showActions: false, likes: 0 },
+  { bookId: 3, title: "Star Daughter", cover: star, liked: false, message: "", showActions: false, likes: 0 },
+  { bookId: 4, title: "The Moon And Stars", cover: moon, liked: false, message: "", showActions: false, likes: 0 },
+  // ... add the rest
+]);
+
+function selectBook(book) {
+  book.showActions = !book.showActions;
+}
+
+async function likeBook(book) {
+  if (!book.liked) {
+    book.liked = true;
+    book.likes += 1;
+
+    try {
+      await axios.put("http://localhost:8080/api/Book/update", {
+        bookId: book.bookId,
+        title: book.title,
+        message: book.message
+      });
+    } catch (error) {
+      console.error("Error updating book like:", error);
+    }
+  }
+}
+
+async function submitComment(book) {
+  if (book.message.trim() !== "") {
+    try {
+      await axios.put("http://localhost:8080/api/Book/update", {
+        bookId: book.bookId,
+        title: book.title,
+        message: book.message
+      });
+      book.message = ""; // clear input after submission
+      alert(`Thanks for your feedback on "${book.title}"!`);
+    } catch (error) {
+      console.error("Error submitting comment:", error);
+      alert("Failed to save comment.");
+    }
+  } else {
+    alert("Please write a comment before submitting.");
+  }
+}
+</script>
+
 <template>
-  <div class="book-page">
+  <div class="app">
+    <div class="content">
+      <h1>{{ title }}</h1>
+      <section class="library">
+        <h2>Library</h2>
+        <div class="book-grid">
+          <div v-for="book in books" :key="book.bookId" class="book-card">
+            <img
+                :src="book.cover"
+                :alt="book.title"
+                class="book-cover"
+                @click="selectBook(book)"
+            />
+            <p>{{ book.title }}</p>
+            <p>❤️ Likes: {{ book.likes }}</p>
 
-    <header class="book-header">
-      <h2>Available Books</h2>
-      <router-link to="/" class="back-link">← Back to Profile</router-link>
-    </header>
-
-
-    <section class="book-list">
-      <div class="book-card" v-for="book in books" :key="book.id">
-        <h3>{{ book.title }}</h3>
-        <p><strong>Author:</strong> {{ book.author }}</p>
-        <p>{{ book.description }}</p>
-
-
-        <button @click="likeBook(book)"> Like</button>
-
-
-        <div v-if="book.liked" class="comment-section">
-          <textarea v-model="book.comment" placeholder="Leave your feedback..."></textarea>
-          <button @click="submitComment(book)">Submit Comment</button>
-
-
-          <p v-if="book.submittedComment">
-            <strong>Your Feedback:</strong> {{ book.submittedComment }}
-          </p>
+            <div v-if="book.showActions" class="actions-section">
+              <button @click="likeBook(book)">Like</button>
+              <div class="comment-section">
+                <textarea v-model="book.message" placeholder="Leave your feedback..."></textarea>
+                <button @click="submitComment(book)">Submit Comment</button>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'BookPage',
-  data() {
-    return {
-      books: [
-        { id: 1, title: "Spider Man", author: "Stan Lee", description: "A thrilling superhero story.", liked: false, comment: "", submittedComment: "" },
-        { id: 2, title: "Super Man", author: "Jerry Siegel", description: "A classic hero adventure.", liked: false, comment: "", submittedComment: "" },
-        { id: 3, title: "Batman", author: "Bob Kane", description: "A dark and mysterious tale.", liked: false, comment: "", submittedComment: "" }
-      ]
-    };
-  },
-  methods: {
-    likeBook(book) {
-      book.liked = true;
-      alert(`You liked "${book.title}"! Now you can leave feedback.`);
-    },
-    submitComment(book) {
-      if (book.comment.trim() !== "") {
-        book.submittedComment = book.comment;
-        book.comment = ""; // clear input
-        alert(`Thanks for your feedback on "${book.title}"!`);
-      } else {
-        alert("Please write a comment before submitting.");
-      }
-    }
-  }
-};
-</script>
-
 <style scoped>
-.book-page {
-  padding: 20px;
-  font-family: Arial, sans-serif;
-}
-
-.book-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.back-link {
-  text-decoration: none;
-  color: #007bff;
-}
-
-.book-list {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
 }
 
 .book-card {
-  border: 1px solid #ccc;
-  padding: 15px;
-  border-radius: 8px;
+  background: transparent;
+  border-radius: 12px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 12px;
+  backdrop-filter: blur(10px);
+  border: 1px solid transparent;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s;
+  text-align: center;
 }
 
-.book-card button {
-  margin-top: 10px;
-  padding: 5px 10px;
+.book-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.book-cover {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
   cursor: pointer;
 }
 
-.comment-section {
+.actions-section {
   margin-top: 10px;
 }
 
