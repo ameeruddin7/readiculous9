@@ -1,32 +1,33 @@
 import { createRouter, createWebHistory } from 'vue-router'
+
+// Import your views
 import Home from "@/views/home.vue";
 import ForgotPassword from "@/views/ForgotPassword.vue";
 import LoginPage from "@/views/LoginPage.vue";
-import book from "@/views/book.vue";
+import Book from "@/views/book.vue";
 import CreateClub from "@/views/CreateClub.vue";
 import AdminPage from "@/views/AdminPage.vue";
-import preferencepage from "@/views/preferencepage.vue";
+import PreferencePage from "@/views/preferencepage.vue";
 import Library from "@/views/Library.vue";
 import Profile from "@/views/Profile.vue";
 
-
+// Define routes
 const routes = [
-    {path: '/',name: 'Home', component: Home},
-    {path: '/ForgotPassword',name: 'ForgotPassword', component: ForgotPassword},
-    {path: '/Login', name: 'Login', component: LoginPage},
-    {path: '/book',name: 'book',component: book},
-    {path: '/CreateClub', name: 'CreateClub', component: CreateClub},
-    {path: '/club/:id/admin', name: 'AdminPage', component: AdminPage},
-    {path: '/preference',name: 'preference',component: preferencepage},
-    {path: '/Library',name: 'Library',component: Library},
-    {path: '/Profile',name: 'Profile',component: Profile},
+    { path: '/', name: 'Home', component: Home },
+    { path: '/forgot-password', name: 'ForgotPassword', component: ForgotPassword },
+    { path: '/login', name: 'Login', component: LoginPage },
+    { path: '/book', name: 'Book', component: Book },
+    { path: '/create-club', name: 'CreateClub', component: CreateClub },
+    { path: '/club/:id/admin', name: 'AdminPage', component: AdminPage },
+    { path: '/preference', name: 'Preference', component: PreferencePage }, // <-- Make sure name matches router.push
+    { path: '/library', name: 'Library', component: Library },
+    { path: '/profile', name: 'Profile', component: Profile },
+];
 
-
-]
-
+// Create router instance
 const router = createRouter({
     history: createWebHistory(),
     routes,
-})
+});
 
-export default router
+export default router;

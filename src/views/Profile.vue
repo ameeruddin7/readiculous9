@@ -1,19 +1,14 @@
 <template>
   <div class="profile-page" v-if="user">
-
-
     <!-- User Account Info -->
     <section class="profile-card">
       <div class="avatar-container">
-        <!-- Show preview or saved avatar -->
         <img
             v-if="previewImage || user.avatar"
             :src="previewImage || user.avatar"
             alt="Profile Picture"
             class="avatar"
         />
-
-        <!-- Upload new picture -->
         <input type="file" accept="image/*" @change="handleFileUpload" />
       </div>
 
@@ -25,26 +20,42 @@
     </section>
 
     <!-- Preferences -->
-    <section class="preferences-card" v-if="preferences">
+    <section class="preferences-card">
       <h2>📚 My Reading Preferences</h2>
       <label>
         Favorite Genre:
-        <input v-model="preferences.genre" />
+        <select v-model="preferences.genre">
+          <option>Fiction</option>
+          <option>Non-Fiction</option>
+          <option>Romance</option>
+          <option>Science Fiction</option>
+          <option>Fantasy</option>
+          <option>Mystery</option>
+          <option>Biography</option>
+        </select>
       </label>
       <label>
         Reading Frequency:
-        <input v-model="preferences.frequency" />
+        <select v-model="preferences.frequency">
+          <option>Daily</option>
+          <option>Weekly</option>
+          <option>Monthly</option>
+        </select>
       </label>
       <label>
         Preferred Format:
-        <input v-model="preferences.format" />
+        <select v-model="preferences.format">
+          <option>E-Books</option>
+          <option>Print Books</option>
+          <option>Audiobooks</option>
+        </select>
       </label>
     </section>
 
     <!-- Actions -->
     <div class="actions">
-      <button @click="saveProfile">💾 Save Profile</button>
-      <button @click="goToPreferences">Edit Preferences Page</button>
+      <button @click="savePreferences">💾 Save Preferences</button>
+      <button @click="goToPreferences">✏️ Edit Preferences Page</button>
     </div>
   </div>
 
@@ -60,59 +71,62 @@ import axios from "axios"
 
 const router = useRouter()
 const user = ref(null)
-const preferences = ref(null)
-const previewImage = ref(null) // <-- NEW for preview
+const preferences = ref({ genre: "", frequency: "", format: "" })
+const previewImage = ref(null)
+const userId = 1 // replace with logged-in user ID from your auth flow
 
-const userId = 1 // Hardcoded for now
-
-// Fetch user profile on load
+// Load user profile and preferences
 onMounted(async () => {
   try {
     const response = await axios.get(`http://localhost:8080/api/User/read/${userId}`)
     user.value = response.data
-    preferences.value = response.data.preferences || {}
+
+    // Load preferences from backend if available
+    preferences.value = response.data.preferences || {
+      genre: "Fiction",
+      frequency: "Weekly",
+      format: "Print Books"
+    }
   } catch (error) {
     console.error("Error fetching user profile:", error)
   }
 })
 
-// Handle file upload and preview
+// Handle avatar upload and preview
 function handleFileUpload(event) {
   const file = event.target.files[0]
   if (file) {
-    // Show preview
     previewImage.value = URL.createObjectURL(file)
-
-    // Convert to Base64 (to save in backend if needed)
     const reader = new FileReader()
     reader.onload = () => {
-      user.value.avatar = reader.result // store base64 in user object
+      user.value.avatar = reader.result
     }
     reader.readAsDataURL(file)
   }
 }
 
-// Save updated profile
-async function saveProfile() {
+// Save only preferences to backend
+async function savePreferences() {
   try {
     const payload = {
-      ...user.value,
-      preferences: preferences.value
+      userId,
+      genre: preferences.value.genre,
+      frequency: preferences.value.frequency,
+      format: preferences.value.format
     }
 
-    const response = await axios.put(`http://localhost:8080/api/User/update`, payload)
-    user.value = response.data
-    previewImage.value = null // clear preview (since it’s saved now)
-
-    alert("✅ Profile updated successfully!")
+    await axios.put("http://localhost:8080/api/UserPreference/update", payload)
+    localStorage.setItem("preferences", JSON.stringify(preferences.value)) // update local storage too
+    alert("✅ Preferences updated successfully!")
   } catch (error) {
-    console.error("Error updating profile:", error)
-    alert("❌ Failed to update profile.")
+    console.error("Error updating preferences:", error)
+    alert("❌ Failed to update preferences.")
   }
 }
 
+// Navigate to preference page
 function goToPreferences() {
-  router.push("/preferences")
+  router.push({ name: "preference" })
 }
 </script>
 
@@ -140,24 +154,13 @@ function goToPreferences() {
   margin-bottom: 1.5rem;
 }
 
-.avatar {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-}
-
-input {
+input, select {
   display: block;
   margin: 0.5rem auto;
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 0.4rem;
   width: 90%;
-}
-
-.preferences-card h2 {
-  margin-bottom: 0.5rem;
-  color: #4a2c2a;
 }
 
 .actions {

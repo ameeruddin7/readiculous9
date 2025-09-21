@@ -36,8 +36,6 @@
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
   name: "PreferencesPage",
   data() {
@@ -46,57 +44,22 @@ export default {
         genre: "Fiction",
         frequency: "Weekly",
         format: "Print Books"
-      },
-      userId: null
+      }
     };
   },
   methods: {
-    async savePreferences() {
-      if (!this.userId) {
-        alert("User not logged in.");
-        return;
-      }
-
-      try {
-        const response = await axios.post(
-            `http://localhost:8080/api/UserPreference/create`,
-            {
-              userId: this.userId,
-              genre: this.preferences.genre,
-              frequency: this.preferences.frequency,
-              format: this.preferences.format
-            }
-        );
-        alert("Preferences saved successfully!");
-        console.log(response.data);
-      } catch (error) {
-        console.error(error);
-        alert("Error saving preferences.");
-      }
-    },
-
-    async loadPreferences() {
-      if (!this.userId) return;
-      try {
-        const response = await axios.get(
-            `http://localhost:8080/api/UserPreference/user/${this.userId}`
-        );
-        if (response.data) {
-          this.preferences = {
-            genre: response.data.genre,
-            frequency: response.data.frequency,
-            format: response.data.format
-          };
-        }
-      } catch (error) {
-        console.error("Error loading preferences:", error);
-      }
+    savePreferences() {
+      // save preferences to localStorage
+      localStorage.setItem("preferences", JSON.stringify(this.preferences));
+      alert("Preferences saved locally!");
     }
   },
   mounted() {
-    // Get userId from localStorage or your login flow
-    this.userId = localStorage.getItem("userId");
-    this.loadPreferences();
+    // load saved preferences if any
+    const savedPrefs = localStorage.getItem("preferences");
+    if (savedPrefs) {
+      this.preferences = JSON.parse(savedPrefs);
+    }
   }
 };
 </script>
