@@ -1,14 +1,22 @@
 <template>
   <div class="profile-page" v-if="user">
-    <h1>👤 My Profile</h1>
+
 
     <!-- User Account Info -->
     <section class="profile-card">
       <div class="avatar-container">
-        <img :src="user.avatar || 'https://i.pravatar.cc/150?img=12'"
-             alt="Profile Picture"
-             class="avatar" />
+        <!-- Show preview or saved avatar -->
+        <img
+            v-if="previewImage || user.avatar"
+            :src="previewImage || user.avatar"
+            alt="Profile Picture"
+            class="avatar"
+        />
+
+        <!-- Upload new picture -->
+        <input type="file" accept="image/*" @change="handleFileUpload" />
       </div>
+
       <div class="info">
         <input v-model="user.name" placeholder="First Name" />
         <input v-model="user.surname" placeholder="Last Name" />
@@ -53,11 +61,11 @@ import axios from "axios"
 const router = useRouter()
 const user = ref(null)
 const preferences = ref(null)
+const previewImage = ref(null) // <-- NEW for preview
 
-// Example: Hardcode logged-in user ID for now (replace with auth state later)
-const userId = 1
+const userId = 1 // Hardcoded for now
 
-// Fetch user profile on page load
+// Fetch user profile on load
 onMounted(async () => {
   try {
     const response = await axios.get(`http://localhost:8080/api/User/read/${userId}`)
@@ -68,15 +76,34 @@ onMounted(async () => {
   }
 })
 
-// Save updated profile (PUT request)
+// Handle file upload and preview
+function handleFileUpload(event) {
+  const file = event.target.files[0]
+  if (file) {
+    // Show preview
+    previewImage.value = URL.createObjectURL(file)
+
+    // Convert to Base64 (to save in backend if needed)
+    const reader = new FileReader()
+    reader.onload = () => {
+      user.value.avatar = reader.result // store base64 in user object
+    }
+    reader.readAsDataURL(file)
+  }
+}
+
+// Save updated profile
 async function saveProfile() {
   try {
     const payload = {
       ...user.value,
       preferences: preferences.value
     }
+
     const response = await axios.put(`http://localhost:8080/api/User/update`, payload)
     user.value = response.data
+    previewImage.value = null // clear preview (since it’s saved now)
+
     alert("✅ Profile updated successfully!")
   } catch (error) {
     console.error("Error updating profile:", error)
@@ -85,11 +112,19 @@ async function saveProfile() {
 }
 
 function goToPreferences() {
-  router.push("/preferences") // make sure this route exists
+  router.push("/preferences")
 }
 </script>
 
 <style scoped>
+.avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
+
 .profile-page {
   max-width: 600px;
   margin: 2rem auto;
