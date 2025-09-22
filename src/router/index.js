@@ -11,13 +11,14 @@ import PreferencePage from "@/views/preferencepage.vue";
 import Library from "@/views/Library.vue";
 import Profile from "@/views/Profile.vue";
 
+
 // Define routes
 const routes = [
     { path: '/', name: 'Home', component: Home },
     { path: '/forgot-password', name: 'ForgotPassword', component: ForgotPassword },
     { path: '/login', name: 'Login', component: LoginPage },
     { path: '/book', name: 'Book', component: Book },
-    { path: '/create-club', name: 'CreateClub', component: CreateClub },
+    { path: '/createclub', name: 'CreateClub', component: CreateClub },
     { path: '/club/:id/admin', name: 'AdminPage', component: AdminPage },
     { path: '/preference', name: 'Preference', component: PreferencePage }, // <-- Make sure name matches router.push
     { path: '/library', name: 'Library', component: Library },
