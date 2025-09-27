@@ -14,47 +14,22 @@
 
       <div class="info">
         <input v-model="user.name" placeholder="First Name" />
-        <input v-model="user.surname" placeholder="Last Name" />
+        <input v-model="user.lastName" placeholder="Last Name" />
         <input v-model="user.email" placeholder="Email" />
       </div>
     </section>
 
-    <!-- Preferences -->
+    <!-- Preferences (Read-Only) -->
     <section class="preferences-card">
       <h2>📚 My Reading Preferences</h2>
-      <label>
-        Favorite Genre:
-        <select v-model="preferences.genre">
-          <option>Fiction</option>
-          <option>Non-Fiction</option>
-          <option>Romance</option>
-          <option>Science Fiction</option>
-          <option>Fantasy</option>
-          <option>Mystery</option>
-          <option>Biography</option>
-        </select>
-      </label>
-      <label>
-        Reading Frequency:
-        <select v-model="preferences.frequency">
-          <option>Daily</option>
-          <option>Weekly</option>
-          <option>Monthly</option>
-        </select>
-      </label>
-      <label>
-        Preferred Format:
-        <select v-model="preferences.format">
-          <option>E-Books</option>
-          <option>Print Books</option>
-          <option>Audiobooks</option>
-        </select>
-      </label>
+      <p><strong>Favorite Genre:</strong> {{ preferences.genre }}</p>
+      <p><strong>Reading Frequency:</strong> {{ preferences.frequency }}</p>
+      <p><strong>Preferred Format:</strong> {{ preferences.format }}</p>
     </section>
 
     <!-- Actions -->
     <div class="actions">
-      <button @click="savePreferences">💾 Save Preferences</button>
+      <button @click="saveProfile">💾 Save Profile</button>
       <button @click="goToPreferences">✏️ Edit Preferences Page</button>
     </div>
   </div>
@@ -105,26 +80,27 @@ function handleFileUpload(event) {
   }
 }
 
-// Save only preferences to backend
-async function savePreferences() {
+// Save profile (name, lastName, email, avatar)
+async function saveProfile() {
   try {
     const payload = {
-      userId,
-      genre: preferences.value.genre,
-      frequency: preferences.value.frequency,
-      format: preferences.value.format
+      userId: user.value.userId,
+      name: user.value.name,
+      lastName: user.value.lastName,
+      email: user.value.email,
+      password: user.value.password,
+      avatar: user.value.avatar
     }
 
-    await axios.put("http://localhost:8080/api/UserPreference/update", payload)
-    localStorage.setItem("preferences", JSON.stringify(preferences.value)) // update local storage too
-    alert("✅ Preferences updated successfully!")
+    await axios.put("http://localhost:8080/api/User/update", payload)
+    alert("✅ Profile updated successfully!")
   } catch (error) {
-    console.error("Error updating preferences:", error)
-    alert("❌ Failed to update preferences.")
+    console.error("Error updating profile:", error)
+    alert("❌ Failed to update profile.")
   }
 }
 
-// Navigate to preference page
+// Navigate to preference page (unchanged)
 function goToPreferences() {
   router.push({ name: "preference" })
 }
@@ -154,13 +130,17 @@ function goToPreferences() {
   margin-bottom: 1.5rem;
 }
 
-input, select {
+input {
   display: block;
   margin: 0.5rem auto;
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 0.4rem;
   width: 90%;
+}
+
+.preferences-card p {
+  margin: 0.5rem 0;
 }
 
 .actions {
