@@ -10,7 +10,7 @@
           <li><router-link to="/">Home</router-link></li>
           <li><router-link to="/preference">Preference</router-link></li>
           <li><router-link to="/library">Library</router-link></li>
-          <li><router-link to="/CreateClub">Create Club</router-link></li>
+          <li><router-link to="/create-club">Create Club</router-link></li>
           <li><router-link to="/Profile">Profile</router-link></li>
           <li><router-link to="/club/1/admin">Admin Page</router-link></li>
           <li><a href="#" @click.prevent="logout">Logout</a></li>
