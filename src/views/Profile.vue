@@ -40,43 +40,49 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue"
-import { useRouter } from "vue-router"
-import axios from "axios"
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import axios from "axios";
 
-const router = useRouter()
-const user = ref(null)
-const preferences = ref({ genre: "", frequency: "", format: "" })
-const previewImage = ref(null)
-const userId = 1 // replace with logged-in user ID from your auth flow
+const router = useRouter();
+const user = ref(null);
+const preferences = ref({ genre: "", frequency: "", format: "" });
+const previewImage = ref(null);
 
-// Load user profile and preferences
+// Load preferences from localStorage
+const localPreferences = JSON.parse(localStorage.getItem("preferences"));
+if (localPreferences) {
+  preferences.value = localPreferences;
+}
+
+// Get logged-in user info from localStorage (for auth only, no profile data)
+const loggedInUser = JSON.parse(localStorage.getItem("user"));
+if (!loggedInUser) {
+  alert("You must be logged in to view your profile.");
+  router.push("/login");
+}
+
+// Fetch user data from database
 onMounted(async () => {
   try {
-    const response = await axios.get(`http://localhost:8080/api/User/read/${userId}`)
-    user.value = response.data
-
-    // Load preferences from backend if available
-    preferences.value = response.data.preferences || {
-      genre: "Fiction",
-      frequency: "Weekly",
-      format: "Print Books"
-    }
+    const response = await axios.get(`http://localhost:8080/api/User/read/${loggedInUser.userId}`);
+    user.value = response.data;
   } catch (error) {
-    console.error("Error fetching user profile:", error)
+    console.error("Error fetching user profile:", error);
+    alert("Failed to load profile.");
   }
-})
+});
 
 // Handle avatar upload and preview
 function handleFileUpload(event) {
-  const file = event.target.files[0]
+  const file = event.target.files[0];
   if (file) {
-    previewImage.value = URL.createObjectURL(file)
-    const reader = new FileReader()
+    previewImage.value = URL.createObjectURL(file);
+    const reader = new FileReader();
     reader.onload = () => {
-      user.value.avatar = reader.result
-    }
-    reader.readAsDataURL(file)
+      user.value.avatar = reader.result;
+    };
+    reader.readAsDataURL(file);
   }
 }
 
@@ -90,19 +96,19 @@ async function saveProfile() {
       email: user.value.email,
       password: user.value.password,
       avatar: user.value.avatar
-    }
+    };
 
-    await axios.put("http://localhost:8080/api/User/update", payload)
-    alert("✅ Profile updated successfully!")
+    await axios.put("http://localhost:8080/api/User/update", payload);
+    alert("✅ Profile updated successfully!");
   } catch (error) {
-    console.error("Error updating profile:", error)
-    alert("❌ Failed to update profile.")
+    console.error("Error updating profile:", error);
+    alert("❌ Failed to update profile.");
   }
 }
 
-// Navigate to preference page (unchanged)
+// Navigate to preference page
 function goToPreferences() {
-  router.push({ name: "preference" })
+  router.push({ name: "preference" });
 }
 </script>
 

@@ -12,44 +12,41 @@
         <template v-if="!isLogin">
           <div class="form-group">
             <label>First Name</label>
-            <input v-model="name" type="text" required />
+            <input v-model="name" type="text" placeholder="Enter your first name" required />
           </div>
 
           <div class="form-group">
             <label>Last Name</label>
-            <input v-model="surname" type="text" required />
+            <input v-model="lastName" type="text" placeholder="Enter your last name" required />
           </div>
 
           <div class="form-group">
             <label>Username</label>
-            <input v-model="username" type="text" required />
+            <input v-model="username" type="text" placeholder="Choose a username" required />
           </div>
 
           <div class="form-group">
             <label>Contact Number</label>
-            <input v-model="contact" type="tel" required />
+            <input v-model="contact" type="tel" placeholder="Enter your contact number" required />
           </div>
         </template>
 
-        <!-- Email / Username -->
         <div class="form-group">
           <label>{{ isLogin ? 'Username or Email' : 'Email' }}</label>
-          <input v-model="email" :type="isLogin ? 'text' : 'email'" required />
+          <input v-model="email" :type="isLogin ? 'text' : 'email'" placeholder="Enter your email" required />
         </div>
 
-        <!-- Password -->
         <div class="form-group">
           <label>{{ isLogin ? 'Password' : 'Create Password' }}</label>
-          <input v-model="password" type="password" required />
+          <input v-model="password" type="password" placeholder="Enter password" required />
           <small v-if="!isLogin && password && !isPasswordStrong" class="error">
             Password must be at least 8 characters, include a number, uppercase & lowercase.
           </small>
         </div>
 
-        <!-- Confirm Password -->
         <div class="form-group" v-if="!isLogin">
           <label>Confirm Password</label>
-          <input v-model="confirmPassword" type="password" required />
+          <input v-model="confirmPassword" type="password" placeholder="Confirm password" required />
           <small v-if="confirmPassword && !doPasswordsMatch" class="error">
             Passwords do not match.
           </small>
@@ -85,14 +82,13 @@ const isLogin = ref(true);
 const showForgotPassword = ref(false);
 
 const name = ref("");
-const surname = ref("");
+const lastName = ref("");
 const username = ref("");
 const contact = ref("");
 const email = ref("");
 const password = ref("");
 const confirmPassword = ref("");
 
-// Password validation
 const isPasswordStrong = computed(() =>
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(password.value)
 );
@@ -103,7 +99,7 @@ const toggleForm = () => {
   isLogin.value = !isLogin.value;
   showForgotPassword.value = false;
   name.value = "";
-  surname.value = "";
+  lastName.value = "";
   username.value = "";
   contact.value = "";
   email.value = "";
@@ -115,8 +111,7 @@ const submitForm = async () => {
   if (
       !email.value ||
       !password.value ||
-      (!isLogin.value &&
-          (!name.value || !surname.value || !username.value || !contact.value || !confirmPassword.value))
+      (!isLogin.value && (!name.value || !lastName.value || !username.value || !contact.value || !confirmPassword.value))
   ) {
     alert("Please fill in all required fields.");
     return;
@@ -124,7 +119,6 @@ const submitForm = async () => {
 
   try {
     if (!isLogin.value) {
-      // --- SIGNUP ---
       if (!isPasswordStrong.value) {
         alert("Password must be strong.");
         return;
@@ -134,9 +128,9 @@ const submitForm = async () => {
         return;
       }
 
-      const response = await axios.post("http://localhost:8080/api/User/create", {
+      await axios.post("http://localhost:8080/api/User/create", {
         name: name.value,
-        surname: surname.value,
+        lastName: lastName.value,
         username: username.value,
         email: email.value,
         password: password.value,
@@ -144,21 +138,16 @@ const submitForm = async () => {
       });
 
       alert("Signup successful!");
-      console.log(response.data);
-      isLogin.value = true; // switch to login after signup
-
+      isLogin.value = true;
     } else {
-      // --- LOGIN ---
       const response = await axios.post("http://localhost:8080/api/User/login", {
         email: email.value,
         password: password.value,
       });
 
-      // Store user info in localStorage
       localStorage.setItem("user", JSON.stringify(response.data));
-
       alert("Login successful!");
-      router.push("/library"); // redirect after login
+      router.push("/library");
     }
   } catch (error) {
     console.error(error);
@@ -170,7 +159,7 @@ const submitForm = async () => {
 <style scoped>
 .page {
   font-family: "Segoe UI", sans-serif;
-  background: #ffffff;
+  background: #f0f2f5;
   min-height: 100vh;
   width: 100%;
   padding: 2rem;
@@ -187,22 +176,24 @@ const submitForm = async () => {
 }
 
 .logo {
-  height: 120px;
+  height: 100px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .auth-box {
-  background-color: #f9f9f9;
-  padding: 3rem 4rem;
+  background-color: #ffffff;
+  padding: 2.5rem 3rem;
   border-radius: 16px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.08);
-  width: 500px;
-  max-width: 95%;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  width: 400px;
+  max-width: 90%;
   text-align: center;
 }
 
 .auth-box h2 {
   color: #111;
-  font-size: 1.8rem;
+  font-size: 2rem;
   margin-bottom: 2rem;
 }
 
@@ -218,21 +209,22 @@ const submitForm = async () => {
   display: block;
 }
 
-.input {
+input {
   width: 100%;
   padding: 0.7rem;
-  border-radius: 6px;
+  border-radius: 8px;
   border: 1px solid #ccc;
-  background: #f0f0f0;
+  background: #f9f9f9;
   font-size: 1rem;
-  color: #000000;
+  color: #000;
+  transition: all 0.2s;
 }
 
 input:focus {
   outline: none;
-  border-color: #000;
+  border-color: #42b883;
   background: #fff;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
 }
 
 small.error {
@@ -244,19 +236,19 @@ small.error {
 
 .submit-btn {
   margin-top: 1.5rem;
-  padding: 0.8rem;
-  background-color: #000000;
+  padding: 0.9rem;
+  background-color: #42b883;
   border: none;
   border-radius: 8px;
   color: white;
   font-size: 1.1rem;
   cursor: pointer;
   width: 100%;
-  transition: background 0.2s ease-in-out;
+  transition: background 0.3s ease-in-out;
 }
 
 .submit-btn:hover {
-  background-color: #333333;
+  background-color: #369d6b;
 }
 
 .toggle-text {
@@ -273,7 +265,8 @@ small.error {
 
 .forgot-password a {
   font-size: 0.85rem;
-  color: #666;
+  color: #42b883;
   cursor: pointer;
+  text-decoration: underline;
 }
 </style>
