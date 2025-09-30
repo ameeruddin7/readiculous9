@@ -1,13 +1,13 @@
 <template>
   <header class="custom-header">
-    <!-- Left: Dropdown Button -->
-    <div class="dropdown">
+
+    <div class="dropdown" v-if="$route.path !== '/' && $route.path !== '/login'">
       <button class="dropbtn">☰ Account</button>
       <div class="dropdown-content">
         <ul>
           <li><router-link to="/book">Book</router-link></li>
           <li><router-link to="/login">Login</router-link></li>
-          <li><router-link to="/">logout</router-link></li>
+          <li><router-link to="/" @click.prevent="logout">Logout</router-link></li>
           <li><router-link to="/preference">Preference</router-link></li>
           <li><router-link to="/library">Library</router-link></li>
           <li><router-link to="/create-club">Create Club</router-link></li>
@@ -16,6 +16,7 @@
         </ul>
       </div>
     </div>
+
 
     <!-- Right: Logo -->
     <div class="logo-container">

@@ -30,7 +30,7 @@
     <!-- Actions -->
     <div class="actions">
       <button @click="saveProfile">💾 Save Profile</button>
-      <button @click="goToPreferences">✏️ Edit Preferences Page</button>
+     
     </div>
   </div>
 
