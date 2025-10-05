@@ -21,19 +21,14 @@
           </div>
 
           <div class="form-group">
-            <label>Username</label>
-            <input v-model="username" type="text" placeholder="Choose a username" required />
-          </div>
-
-          <div class="form-group">
             <label>Contact Number</label>
             <input v-model="contact" type="tel" placeholder="Enter your contact number" required />
           </div>
         </template>
 
         <div class="form-group">
-          <label>{{ isLogin ? 'Username or Email' : 'Email' }}</label>
-          <input v-model="email" :type="isLogin ? 'text' : 'email'" placeholder="Enter your email" required />
+          <label>Email</label>
+          <input v-model="email" type="email" placeholder="Enter your email" required />
         </div>
 
         <div class="form-group">
@@ -83,7 +78,6 @@ const showForgotPassword = ref(false);
 
 const name = ref("");
 const lastName = ref("");
-const username = ref("");
 const contact = ref("");
 const email = ref("");
 const password = ref("");
@@ -100,7 +94,6 @@ const toggleForm = () => {
   showForgotPassword.value = false;
   name.value = "";
   lastName.value = "";
-  username.value = "";
   contact.value = "";
   email.value = "";
   password.value = "";
@@ -108,11 +101,7 @@ const toggleForm = () => {
 };
 
 const submitForm = async () => {
-  if (
-      !email.value ||
-      !password.value ||
-      (!isLogin.value && (!name.value || !lastName.value || !username.value || !contact.value || !confirmPassword.value))
-  ) {
+  if (!email.value || !password.value || (!isLogin.value && (!name.value || !lastName.value || !contact.value || !confirmPassword.value))) {
     alert("Please fill in all required fields.");
     return;
   }
@@ -131,7 +120,6 @@ const submitForm = async () => {
       await axios.post("http://localhost:8080/api/User/create", {
         name: name.value,
         lastName: lastName.value,
-        username: username.value,
         email: email.value,
         password: password.value,
         contact: contact.value,
@@ -178,7 +166,7 @@ const submitForm = async () => {
 .logo {
   height: 100px;
   border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .auth-box {
@@ -211,20 +199,18 @@ const submitForm = async () => {
 
 input {
   width: 100%;
-  padding: 0.7rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  background: #f9f9f9;
+  padding: 0.9rem;
+  border-radius: 6px;
+  border: none;
+  background: #f2f2f2;
   font-size: 1rem;
   color: #000;
-  transition: all 0.2s;
+  transition: background 0.2s;
 }
 
 input:focus {
   outline: none;
-  border-color: #42b883;
-  background: #fff;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  background: #e9e9e9;
 }
 
 small.error {
@@ -237,7 +223,7 @@ small.error {
 .submit-btn {
   margin-top: 1.5rem;
   padding: 0.9rem;
-  background-color: #42b883;
+  background-color: #000;
   border: none;
   border-radius: 8px;
   color: white;
@@ -248,7 +234,7 @@ small.error {
 }
 
 .submit-btn:hover {
-  background-color: #369d6b;
+  background-color: #333;
 }
 
 .toggle-text {
@@ -265,8 +251,9 @@ small.error {
 
 .forgot-password a {
   font-size: 0.85rem;
-  color: #42b883;
+  color: #000;
   cursor: pointer;
   text-decoration: underline;
 }
 </style>
+
