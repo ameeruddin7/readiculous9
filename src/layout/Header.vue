@@ -13,6 +13,8 @@
           <li><router-link to="/create-club">Create Club</router-link></li>
           <li><router-link to="/Profile">Profile</router-link></li>
           <li><router-link to="/club/1/admin">Admin Page</router-link></li>
+          <li><router-link to="/adminBook">Admin book</router-link></li>
+
         </ul>
       </div>
     </div>

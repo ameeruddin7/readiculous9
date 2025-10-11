@@ -1,131 +1,91 @@
-<script setup>
-import {ref} from "vue";
-
-
-const title = ref("Our Readiculous Books for Readaholics");
-
-
-import breathe from "@/assets/breathe.jpg";
-import door from "@/assets/door.jpg";
-import star from "@/assets/star.jpg";
-import moon from "@/assets/the moon.jpg";
-import karin from "@/assets/karin.jpg";
-import wicked from "@/assets/wicked.jpg";
-import vintage from "@/assets/vintage book.jpg";
-import alone from "@/assets/alone.jpg";
-import green from "@/assets/green.jpg";
-import revenge from "@/assets/revenge.jpg";
-import watching from "@/assets/watching.jpg";
-import shadow from "@/assets/shadow.jpg";
-import serpent from "@/assets/serpent.jpg";
-import rule from "@/assets/rule.png";
-import night from "@/assets/night caller.jpg";
-import ice from "@/assets/ice.jpg";
-import house from "@/assets/house.jpg";
-import clap from "@/assets/clap.jpg";
-import swallows from "@/assets/swallows.jpg";
-import really from "@/assets/really.jpg";
-import past from "@/assets/past.jpg";
-import orange from "@/assets/orange.jpg";
-import norse from "@/assets/norse.jpg";
-import man from "@/assets/man's.jpg";
-
-
-const books = ref([
-  {id: 1, title: "Breathe", cover: breathe},
-  {id: 2, title: "Beyond The Ocean Door", cover: door},
-  {id: 3, title: "Star Daughter", cover: star},
-  {id: 4, title: "The Moon And Stars", cover: moon},
-  {id: 5, title: "The Silent Wife", cover: karin},
-  {id: 6, title: "Wicked", cover: wicked},
-  {id: 7, title: "The Vintage Book", cover: vintage},
-  {id: 8, title: "Alone", cover: alone},
-  {id: 9, title: "The Green Soldier", cover: green},
-  {id: 10, title: "In Mind Of Revenge", cover: revenge},
-  {id: 11, title: "Witching Places", cover: watching},
-  {id: 12, title: "The Shadow Cell", cover: shadow},
-  {id: 13, title: "The Serpent", cover: serpent},
-  {id: 14, title: "The Three Month Rule", cover: rule},
-  {id: 15, title: "Night Caller", cover: night},
-  {id: 16, title: "Breaking The Ice", cover: ice},
-  {id: 17, title: "House Of Hollow", cover: house},
-  {id: 18, title: "Clap When You Land", cover: clap},
-  {id: 19, title: "The Swallows", cover: swallows},
-  {id: 20, title: "Really Good Actually", cover: really},
-  {id: 21, title: "The Past Is Rising", cover: past},
-  {id: 22, title: "City Of Orange", cover: orange},
-  {id: 23, title: "Norse Mythology", cover: norse},
-  {id: 24, title: "A Man's Man", cover: man}
-]);
-</script>
-
 <template>
-  <div class="app">
-    <!-- Content -->
-    <div class="content">
-      <h1>{{ title }}</h1>
+  <div class="min-h-screen bg-gray-50 py-10">
+    <div class="max-w-7xl mx-auto px-4">
+      <h1 class="text-3xl font-bold text-center mb-10 text-gray-800">📚 Our Library</h1>
 
-      <section class="library">
-        <h2>Library</h2>
-        <div class="book-grid">
-          <div v-for="book in books" :key="book.id" class="book-card">
-            <img :src="book.cover" :alt="book.title" class="book-cover"/>
-            <p>{{ book.title }}</p>
+      <!-- Loading and Error States -->
+      <div v-if="loading" class="text-center text-gray-600 text-lg">Loading books...</div>
+      <div v-if="error" class="text-center text-red-600">{{ error }}</div>
+
+      <!-- No Books -->
+      <div v-if="books.length === 0 && !loading && !error" class="text-center text-gray-500">
+        No books available yet.
+      </div>
+
+      <!-- Books Grid -->
+      <div
+          v-if="books.length > 0"
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
+      >
+        <div
+            v-for="book in books"
+            :key="book.bookId"
+            class="bg-white rounded-xl shadow-md hover:shadow-lg transition p-5 flex flex-col items-center text-center"
+        >
+          <!-- Book Cover -->
+          <img
+              v-if="book.image"
+              :src="`data:image/jpeg;base64,${book.image}`"
+              alt="Book Cover"
+              class="w-32 h-44 object-cover rounded-lg mb-4 shadow-sm"
+          />
+          <div
+              v-else
+              class="w-32 h-44 bg-gray-200 rounded-lg mb-4 flex items-center justify-center text-gray-400"
+          >
+            No Image
+          </div>
+
+          <!-- Title -->
+          <h2 class="text-lg font-semibold text-gray-800 mb-3">{{ book.title }}</h2>
+
+          <!-- Book Info -->
+          <div class="text-left text-sm text-gray-700 space-y-1">
+            <p><span class="font-semibold">Author:</span> {{ book.author || "Unknown" }}</p>
+            <p><span class="font-semibold">Genre:</span> {{ book.genre || "N/A" }}</p>
+            <p>
+              <span class="font-semibold">Description:</span>
+              {{ book.description || "No description available." }}
+            </p>
+            <p><span class="font-semibold">Published:</span> {{ book.yearPublished || "—" }}</p>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   </div>
 </template>
 
+<script setup>
+import { ref, onMounted } from "vue";
+
+const books = ref([]);
+const loading = ref(false);
+const error = ref("");
+
+async function fetchBooks() {
+  loading.value = true;
+  error.value = "";
+
+  try {
+    const res = await fetch("http://localhost:8080/api/books/getAll");
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    books.value = await res.json();
+  } catch (err) {
+    console.error(err);
+    error.value = "Failed to load books. Please try again later.";
+  } finally {
+    loading.value = false;
+  }
+}
+
+onMounted(fetchBooks);
+</script>
+
 <style scoped>
-.app {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  padding: 20px;
-}
-
-.content h1 {
-  font-size: 2rem;
-  margin-bottom: 10px;
-}
-
-.library h2 {
-  margin: 20px 0;
-}
-
-.book-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 20px;
-}
-
-.book-card {
-  background: transparent; /* fully transparent background */
-  border-radius: 12px;
-  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
-  padding: 12px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid transparent; /* make border transparent as well */
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s;
-}
-
-.book-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-.book-cover {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-}
-
-.book-card p {
-  margin-top: 8px;
-  font-size: 14px;
-  font-weight: bold;
-  color: #111;
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 </style>
