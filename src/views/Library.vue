@@ -12,44 +12,45 @@
         No books available yet.
       </div>
 
-      <!-- Books Grid -->
+      <!-- ✅ Books Grid -->
       <div
           v-if="books.length > 0"
-          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
+          class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6"
       >
-        <div
+        <a
             v-for="book in books"
             :key="book.bookId"
-            class="bg-white rounded-xl shadow-md hover:shadow-lg transition p-5 flex flex-col items-center text-center"
+            :href="book.link"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="bg-white rounded-xl shadow-md hover:shadow-lg transition p-4 flex flex-col items-center text-center book-card cursor-pointer"
         >
           <!-- Book Cover -->
           <img
               v-if="book.image"
               :src="`data:image/jpeg;base64,${book.image}`"
               alt="Book Cover"
-              class="w-32 h-44 object-cover rounded-lg mb-4 shadow-sm"
+              class="book-cover mb-3 rounded-lg shadow-sm"
           />
           <div
               v-else
-              class="w-32 h-44 bg-gray-200 rounded-lg mb-4 flex items-center justify-center text-gray-400"
+              class="book-cover bg-gray-200 rounded-lg flex items-center justify-center text-gray-400 mb-3"
           >
             No Image
           </div>
 
           <!-- Title -->
-          <h2 class="text-lg font-semibold text-gray-800 mb-3">{{ book.title }}</h2>
+          <h2 class="text-sm font-semibold text-gray-800 mb-2 line-clamp-3">
+            {{ book.title }}
+          </h2>
 
           <!-- Book Info -->
-          <div class="text-left text-sm text-gray-700 space-y-1">
+          <div class="text-left text-xs text-gray-700 space-y-1 book-info">
             <p><span class="font-semibold">Author:</span> {{ book.author || "Unknown" }}</p>
             <p><span class="font-semibold">Genre:</span> {{ book.genre || "N/A" }}</p>
-            <p>
-              <span class="font-semibold">Description:</span>
-              {{ book.description || "No description available." }}
-            </p>
-            <p><span class="font-semibold">Published:</span> {{ book.yearPublished || "—" }}</p>
+            <p><span class="font-semibold">Year:</span> {{ book.yearPublished || "—" }}</p>
           </div>
-        </div>
+        </a>
       </div>
     </div>
   </div>
@@ -87,5 +88,26 @@ onMounted(fetchBooks);
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* ✅ Smaller, consistent book covers */
+.book-cover {
+  width: 120px;
+  height: 170px;
+  object-fit: cover;
+}
+
+/* ✅ Card hover animation */
+.book-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.book-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ Compact book info */
+.book-info {
+  padding: 4px 0;
 }
 </style>
