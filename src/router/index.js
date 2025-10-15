@@ -19,7 +19,7 @@ const routes = [
     { path: '/forgot-password', name: 'ForgotPassword', component: ForgotPassword },
     { path: '/login', name: 'Login', component: LoginPage },
     { path: '/book', name: 'Book', component: Book },
-    { path: '/Createclub', name: 'CreateClub', component: CreateClub },
+    { path: '/create-club', name: 'CreateClub', component: CreateClub },
     { path: '/club/:id/admin', name: 'AdminPage', component: AdminPage },
     { path: '/preference', name: 'Preference', component: PreferencePage }, // <-- Make sure name matches router.push
     { path: '/library', name: 'Library', component: Library },
