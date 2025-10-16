@@ -77,6 +77,7 @@ export default {
       } catch (err) {
         console.error("Error liking book:", err);
       }
+
     },
 
     async addComment(book) {
