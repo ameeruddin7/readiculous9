@@ -8,7 +8,10 @@
       <div v-if="error" class="text-center text-red-600">{{ error }}</div>
 
       <!-- No Books -->
-      <div v-if="books.length === 0 && !loading && !error" class="text-center text-gray-500">
+      <div
+          v-if="books.length === 0 && !loading && !error"
+          class="text-center text-gray-500"
+      >
         No books available yet.
       </div>
 
@@ -17,40 +20,39 @@
           v-if="books.length > 0"
           class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6"
       >
-        <a
+        <div
             v-for="book in books"
             :key="book.bookId"
-            :href="book.link"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="bg-white rounded-xl shadow-md hover:shadow-lg transition p-4 flex flex-col items-center text-center book-card cursor-pointer"
+            class="bg-white rounded-xl shadow-md hover:shadow-lg transition transform hover:-translate-y-1 p-4 flex flex-col items-center text-center"
         >
           <!-- Book Cover -->
-          <img
-              v-if="book.image"
-              :src="`data:image/jpeg;base64,${book.image}`"
-              alt="Book Cover"
-              class="book-cover mb-3 rounded-lg shadow-sm"
-          />
-          <div
-              v-else
-              class="book-cover bg-gray-200 rounded-lg flex items-center justify-center text-gray-400 mb-3"
-          >
-            No Image
+          <div class="w-full flex justify-center mb-3">
+            <img
+                v-if="book.image"
+                :src="`data:image/jpeg;base64,${book.image}`"
+                alt="Book Cover"
+                class="book-cover rounded-lg shadow-sm"
+            />
+            <div
+                v-else
+                class="book-cover bg-gray-200 rounded-lg flex items-center justify-center text-gray-400"
+            >
+              No Image
+            </div>
           </div>
 
-          <!-- Title -->
-          <h2 class="text-sm font-semibold text-gray-800 mb-2 line-clamp-3">
+          <!-- Book Title -->
+          <h2 class="text-sm font-semibold text-gray-800 mb-1 line-clamp-2">
             {{ book.title }}
           </h2>
 
           <!-- Book Info -->
-          <div class="text-left text-xs text-gray-700 space-y-1 book-info">
+          <div class="text-xs text-gray-700 space-y-1 text-left w-full px-2">
             <p><span class="font-semibold">Author:</span> {{ book.author || "Unknown" }}</p>
             <p><span class="font-semibold">Genre:</span> {{ book.genre || "N/A" }}</p>
             <p><span class="font-semibold">Year:</span> {{ book.yearPublished || "—" }}</p>
           </div>
-        </a>
+        </div>
       </div>
     </div>
   </div>
@@ -83,31 +85,27 @@ onMounted(fetchBooks);
 </script>
 
 <style scoped>
-.line-clamp-3 {
+.line-clamp-2 {
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
 /* ✅ Smaller, consistent book covers */
 .book-cover {
-  width: 120px;
-  height: 170px;
+  width: 100px;
+  height: 150px;
   object-fit: cover;
 }
 
-/* ✅ Card hover animation */
+/* ✅ Card hover and spacing */
 .book-card {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
 .book-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-/* ✅ Compact book info */
-.book-info {
-  padding: 4px 0;
 }
 </style>

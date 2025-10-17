@@ -13,11 +13,21 @@
         <p><strong>Genre:</strong> {{ book.genre }}</p>
         <p><strong>Year Published:</strong> {{ book.year }}</p>
 
+        <!-- ✅ Book Cover Image -->
+        <div v-if="book.image" class="book-image">
+          <img
+              :src="'data:image/jpeg;base64,' + book.image"
+              alt="Book Cover"
+          />
+        </div>
+
+        <!-- ✅ Like Button & Counter -->
         <div class="like-section">
           <button @click="likeBook(book)">👍 Like</button>
           <span>{{ book.likes }} Likes</span>
         </div>
 
+        <!-- Comments -->
         <div class="comment-section">
           <textarea
               v-model="book.newComment"
@@ -44,7 +54,7 @@ export default {
   name: "BookPage",
   data() {
     return {
-      books: [], // fetched from backend
+      books: [],
     };
   },
   methods: {
@@ -52,13 +62,14 @@ export default {
       try {
         const res = await fetch("http://localhost:8080/api/books/getAll");
         const data = await res.json();
-        this.books = data.map(b => ({
+        this.books = data.map((b) => ({
           id: b.bookId,
           title: b.title,
           author: b.author,
           description: b.description,
           genre: b.genre,
           year: b.yearPublished,
+          image: b.image || null,
           likes: b.likes || 0,
           comments: b.comments || [],
           newComment: "",
@@ -68,39 +79,49 @@ export default {
       }
     },
 
+    // ✅ Fixed Like Button Endpoint
     async likeBook(book) {
       try {
-        await fetch(`http://localhost:8080/api/books/${book.id}/like`, {
-          method: "POST",
-        });
-        book.likes++; // increment locally so UI updates immediately
+        const res = await fetch(
+            `http://localhost:8080/api/Discussion/${book.id}/like`,
+            { method: "POST" }
+        );
+
+        if (!res.ok) throw new Error("Failed to like book");
+
+        // Optional: get updated like count from backend
+        const updated = await res.json();
+        book.likes = updated.likes ?? book.likes + 1;
       } catch (err) {
         console.error("Error liking book:", err);
       }
     },
 
+    // ✅ Fixed Comment Endpoint
     async addComment(book) {
       if (!book.newComment.trim()) {
         alert("Please write a comment before submitting.");
         return;
       }
+
       try {
         const payload = {
           comment: book.newComment.trim(),
           author: { userId: 1, name: "Demo User" },
         };
         const res = await fetch(
-            `http://localhost:8080/api/books/${book.id}/comment`,
+            `http://localhost:8080/api/Discussion/${book.id}/comment`,
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify(payload),
             }
         );
+
         const savedComment = await res.json();
         book.comments.push({
           comment: savedComment.comment,
-          authorName: savedComment.author.name || "Unknown",
+          authorName: savedComment.author?.name || "Unknown",
         });
         book.newComment = "";
       } catch (err) {
@@ -146,6 +167,20 @@ export default {
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.book-image {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.book-image img {
+  width: 120px;
+  height: 160px;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
 }
 
 .like-section {
