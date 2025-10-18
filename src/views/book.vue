@@ -95,6 +95,7 @@ export default {
       } catch (err) {
         console.error("Error liking book:", err);
       }
+
     },
 
     // ✅ Fixed Comment Endpoint
