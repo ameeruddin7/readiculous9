@@ -13,6 +13,8 @@
           <li><router-link to="/create-club">Create Club</router-link></li>
           <li><router-link to="/Profile">Profile</router-link></li>
           <li><router-link to="/club/1/admin">Admin Page</router-link></li>
+          <li><router-link to="/UserBook">User Book</router-link></li>
+
         </ul>
       </div>
     </div>
@@ -27,6 +29,7 @@
 
 <script setup lang="ts">
 import { useRouter } from "vue-router";
+import UserBook from "@/views/UserBook.vue";
 
 const router = useRouter();
 

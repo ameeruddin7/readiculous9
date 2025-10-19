@@ -10,6 +10,7 @@ import AdminPage from "@/views/AdminPage.vue";
 import PreferencePage from "@/views/preferencepage.vue";
 import Library from "@/views/Library.vue";
 import Profile from "@/views/Profile.vue";
+import UserBook from "@/views/UserBook.vue";
 
 
 // Define routes
@@ -18,11 +19,13 @@ const routes = [
     { path: '/forgot-password', name: 'ForgotPassword', component: ForgotPassword },
     { path: '/login', name: 'Login', component: LoginPage },
     { path: '/book', name: 'Book', component: Book },
-    { path: '/Createclub', name: 'CreateClub', component: CreateClub },
+    { path: '/create-club', name: 'CreateClub', component: CreateClub },
     { path: '/club/:id/admin', name: 'AdminPage', component: AdminPage },
     { path: '/preference', name: 'Preference', component: PreferencePage }, // <-- Make sure name matches router.push
     { path: '/library', name: 'Library', component: Library },
     { path: '/profile', name: 'Profile', component: Profile },
+    { path: '/UserBook', name: 'adminBook', component: UserBook},
+
 ];
 
 // Create router instance
