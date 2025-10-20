@@ -1,17 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-// Import your views
-import Home from "@/views/home.vue";
-import ForgotPassword from "@/views/ForgotPassword.vue";
-import LoginPage from "@/views/LoginPage.vue";
-import Book from "@/views/book.vue";
-import CreateClub from "@/views/CreateClub.vue";
-import AdminPage from "@/views/AdminPage.vue";
-import PreferencePage from "@/views/preferencepage.vue";
-import Library from "@/views/Library.vue";
-import Profile from "@/views/Profile.vue";
-import UserBook from "@/views/UserBook.vue";
-
+// Import views
+import Home from "@/views/Home.vue"
+import ForgotPassword from "@/views/ForgotPassword.vue"
+import LoginPage from "@/views/LoginPage.vue"
+import Book from "@/views/Book.vue"
+import CreateClub from "@/views/CreateClub.vue"
+import AdminPage from "@/views/AdminPage.vue"
+import PreferencePage from "@/views/PreferencePage.vue"
+import Library from "@/views/Library.vue"
+import Profile from "@/views/Profile.vue"
+import UserBook from "@/views/UserBook.vue"
+import ContactInfo from "@/views/ContactInfo.vue"
 
 // Define routes
 const routes = [
@@ -21,17 +21,20 @@ const routes = [
     { path: '/book', name: 'Book', component: Book },
     { path: '/create-club', name: 'CreateClub', component: CreateClub },
     { path: '/club/:id/admin', name: 'AdminPage', component: AdminPage },
-    { path: '/preference', name: 'Preference', component: PreferencePage }, // <-- Make sure name matches router.push
+    { path: '/preference', name: 'Preference', component: PreferencePage },
     { path: '/library', name: 'Library', component: Library },
     { path: '/profile', name: 'Profile', component: Profile },
-    { path: '/UserBook', name: 'adminBook', component: UserBook},
-
-];
+    { path: '/user-book', name: 'UserBook', component: UserBook },
+    { path: '/contact', name: 'ContactInfo', component: ContactInfo },
+]
 
 // Create router instance
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHistory(import.meta.env.BASE_URL),
     routes,
-});
+    scrollBehavior() {
+        return { top: 0 }
+    },
+})
 
-export default router;
+export default router

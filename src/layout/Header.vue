@@ -1,6 +1,6 @@
 <template>
   <header class="custom-header">
-
+    <!-- Dropdown Menu -->
     <div class="dropdown" v-if="$route.path !== '/' && $route.path !== '/login'">
       <button class="dropbtn">☰ Account</button>
       <div class="dropdown-content">
@@ -14,31 +14,30 @@
           <li><router-link to="/Profile">Profile</router-link></li>
           <li><router-link to="/club/1/admin">Admin Page</router-link></li>
           <li><router-link to="/UserBook">User Book</router-link></li>
-
+          <li><router-link to="/Contactinfo">Contact</router-link></li>
         </ul>
       </div>
     </div>
-
 
     <!-- Right: Logo -->
     <div class="logo-container">
       <img src="@/assets/logo.jpeg" alt="Logo" class="logo" />
     </div>
+
+    <!-- Floating Contact Info Component -->
+    <ContactInfo />
   </header>
 </template>
 
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-import UserBook from "@/views/UserBook.vue";
+import ContactInfo from "@/views/ContactInfo.vue"; // ✅ Import floating contact component
 
 const router = useRouter();
 
 function logout() {
-  // Clear user session or tokens
   localStorage.removeItem("token");
   localStorage.removeItem("user");
-
-  // Redirect to login page
   router.push({ name: "Login" });
 }
 </script>
@@ -98,7 +97,7 @@ function logout() {
   background-color: white;
   min-width: 180px;
   border-radius: 6px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
   z-index: 1;
 }
 
